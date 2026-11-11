@@ -1,0 +1,195 @@
+---
+// Diagramas animados de los casos destacados. Las animaciones están en src/scripts/diagramas.ts.
+interface Props { id: string; titulo: string }
+const { id, titulo } = Astro.props;
+const R = (n: number) => Array.from({ length: n }, (_, i) => i);
+const nodos = [[70, 50, 0], [35, 115, 1], [105, 115, 1], [18, 180, 2], [52, 180, 2], [88, 180, 2], [122, 180, 2]];
+const aristas = [[70, 50, 35, 115, 1], [70, 50, 105, 115, 1], [35, 115, 18, 180, 2], [35, 115, 52, 180, 2], [105, 115, 88, 180, 2], [105, 115, 122, 180, 2]];
+const picks = [3, 17, 22, 38, 41, 55, 60, 66, 73, 79];
+const marcas = ['✓', '✓', '✓', 'NA', '✓', '✓', '✗', '✓', '✓', '✓'];
+const barras: [string, number][] = [['A', 112], ['B', 96], ['C', 131], ['D', 78]];
+const escala = [['≥ 120%', '×1.5'], ['≥ 100%', '×1.0'], ['< 100%', '×0']];
+const pts = [205, 200, 207, 198, 202, 196, 190, 150, 125, 118, 150, 192, 200, 198, 203];
+const curva = 'M' + pts.map((y, i) => `${30 + i * 25} ${y}`).join(' L');
+const salidas = ['07654321.pdf', '41208867.pdf', 'OBSERVADO 1.pdf'];
+const ids = ['bases-personal', 'contratos-cartas', 'muestreo', 'incentivos', 'validador-ocr', 'invita', 'anomalias'];
+---
+{ids.includes(id) && (
+<figure class="diag" data-diag={id}>
+  <svg viewBox="0 0 400 260" role="img" aria-label={titulo}>
+    {id === 'bases-personal' && (<>
+      <text x="16" y="22">Matriz de personal</text>
+      {aristas.map(([a, b, c, d]) => <line x1={a} y1={b} x2={c} y2={d} class="k-l" stroke-width="1.5" />)}
+      {aristas.map(([a, b, c, d, n]) => <line x1={a} y1={b} x2={c} y2={d} class="k-a e" data-e={n} stroke-width="2" />)}
+      {nodos.map(([x, y]) => <circle cx={x} cy={y} r="10" class="d-b k-l" stroke-width="1.5" />)}
+      {nodos.map(([x, y, n]) => <circle cx={x} cy={y} r="10" class="d-a n" data-n={n} />)}
+      <text x="70" y="226" text-anchor="middle">Jerarquía · BFS</text>
+      <line x1="150" y1="115" x2="190" y2="115" class="k-l" stroke-width="1.5" />
+      <path d="M190 110 L198 115 L190 120 Z" class="d-l" />
+      <circle cx="150" cy="115" r="4" class="d-a pk" />
+      <text x="214" y="52">Bases de salida</text>
+      {R(15).map((i) => { const x = 214 + (i % 5) * 35, y = 66 + Math.floor(i / 5) * 34; return (
+        <g>
+          <rect x={x} y={y} width="29" height="25" class="d-b k-l" />
+          <g class="tile"><rect x={x} y={y} width="29" height="25" class="d-s k-a" /><rect x={x + 5} y={y + 7} width="19" height="2.5" class="d-a" /><rect x={x + 5} y={y + 14} width="12" height="2.5" class="d-a" /></g>
+        </g>); })}
+      <text x="301" y="226" text-anchor="middle" class="ctr d-t" font-size="14">15+ bases</text>
+    </>)}
+
+    {id === 'contratos-cartas' && (<>
+      <text x="16" y="26">Excel</text>
+      <rect x="16" y="36" width="134" height="140" class="d-b k-l" />
+      <rect x="16" y="36" width="134" height="18" class="d-l" />
+      <text x="20" y="49" font-size="8">DNI</text><text x="64" y="49" font-size="8">Nombre</text><text x="109" y="49" font-size="8">Monto</text>
+      <rect class="hl d-s k-a" x="16" y="54" width="134" height="24" stroke-width="2" />
+      <path class="k-l" d="M16 78H150 M16 102H150 M16 126H150 M16 150H150 M60 36V176 M105 36V176" />
+      {R(5).map((r) => <g><rect x="22" y={64 + r * 24} width="28" height="4" class="d-l" /><rect x="66" y={64 + r * 24} width="32" height="4" class="d-l" /><rect x="111" y={64 + r * 24} width="24" height="4" class="d-l" /></g>)}
+      <line x1="156" y1="106" x2="170" y2="106" class="k-l" stroke-width="1.5" /><path d="M170 102 L176 106 L170 110 Z" class="d-l" />
+      <text x="180" y="26">Plantilla</text>
+      <rect x="180" y="36" width="86" height="140" class="d-b k-l" />
+      <rect x="190" y="48" width="44" height="6" class="d-t" />
+      <rect x="190" y="64" width="66" height="3" class="d-l" /><rect x="190" y="72" width="56" height="3" class="d-l" />
+      <rect x="190" y="84" width="30" height="8" class="d-s" /><rect x="224" y="84" width="32" height="8" class="d-s" />
+      <rect x="190" y="100" width="46" height="8" class="d-s" />
+      <rect x="190" y="116" width="66" height="3" class="d-l" /><rect x="190" y="124" width="50" height="3" class="d-l" />
+      <rect x="190" y="136" width="30" height="8" class="d-s" />
+      <rect class="campo-a d-a" x="190" y="84" width="30" height="8" /><rect class="campo-a d-a" x="224" y="84" width="32" height="8" />
+      <rect class="campo-a d-a" x="190" y="100" width="46" height="8" /><rect class="campo-a d-a" x="190" y="136" width="30" height="8" />
+      <path class="k-t" d="M192 162 q8 -9 16 0 t16 0" stroke-width="1.2" />
+      <text x="300" y="26">Salida</text>
+      {R(4).map((i) => (
+        <g class="card" transform={`translate(${300 + i * 7} ${40 + i * 12})`}>
+          <rect x="0" y="0" width="64" height="84" class="d-b k-a" stroke-width="1.5" />
+          <rect x="8" y="10" width="34" height="5" class="d-l" /><rect x="8" y="22" width="48" height="3" class="d-l" /><rect x="8" y="30" width="40" height="3" class="d-l" />
+          <rect x="8" y="62" width="30" height="14" class="d-a" /><text x="23" y="72.5" text-anchor="middle" class="d-sa" font-size="9">PDF</text>
+        </g>
+      ))}
+      <g class="sobre"><rect x="306" y="196" width="36" height="24" class="d-b k-a" stroke-width="1.5" /><path class="k-a" d="M306 197 L324 210 L342 197" stroke-width="1.5" /></g>
+      <text x="348" y="212">correo</text>
+      <text x="16" y="202" class="ctr d-t" font-size="13">4 documentos</text>
+      <text x="16" y="222">un archivo por fila</text>
+    </>)}
+
+    {id === 'muestreo' && (<>
+      <text x="16" y="26">Legajos</text>
+      {R(80).map((i) => <circle cx={24 + (i % 10) * 18} cy={46 + Math.floor(i / 10) * 18} r="3.5" class="d-l" />)}
+      {picks.map((i) => <circle cx={24 + (i % 10) * 18} cy={46 + Math.floor(i / 10) * 18} r="5.5" class="d-a pick" />)}
+      <text x="16" y="208" class="ctr d-t" font-size="13">Muestra: 10 de 80</text>
+      <text x="16" y="232" font-size="10">NA se excluye del cálculo</text>
+      <text x="222" y="26">Revisión</text>
+      {marcas.map((m, i) => (
+        <g class="rev">
+          <rect x="222" y={34 + i * 15} width="162" height="13" class="d-b k-l" />
+          <rect x="228" y={39 + i * 15} width={50 + ((i * 17) % 40)} height="3" class="d-l" />
+          <text x="378" y={44.5 + i * 15} text-anchor="end" font-size="10" class={m === '✓' ? 'd-a' : m === '✗' ? 'd-w' : ''}>{m}</text>
+        </g>
+      ))}
+      <rect x="222" y="200" width="162" height="10" class="d-l" />
+      <rect class="dbar d-a" x="222" y="200" width="162" height="10" />
+      <text x="222" y="232">Conformidad</text>
+      <text x="384" y="232" text-anchor="end" class="pct d-t" font-size="14">89%</text>
+    </>)}
+
+    {id === 'incentivos' && (<>
+      <text x="16" y="26">Avance vs objetivo</text>
+      <line x1="24" y1="200" x2="272" y2="200" class="k-l" stroke-width="1.5" />
+      <line x1="24" y1="100" x2="272" y2="100" class="k-t" stroke-dasharray="4 4" />
+      <text x="272" y="94" text-anchor="end" font-size="10">obj. 100%</text>
+      {barras.map(([l, p], i) => (<>
+        <rect class={p >= 100 ? 'dbar d-a' : 'dbar d-w'} x={40 + i * 58} y={200 - p} width="34" height={p} />
+        <text x={57 + i * 58} y={194 - p} text-anchor="middle" class="pct d-t">{p}%</text>
+        <text x={57 + i * 58} y="216" text-anchor="middle">{l}</text>
+      </>))}
+      <text x="24" y="240">Canastas</text>
+      <text x="284" y="26">Escala</text>
+      {escala.map(([a, b], i) => (<>
+        <rect x="284" y={36 + i * 46} width="104" height="38" class="d-b k-l" />
+        <rect class="tier d-s k-a" x="284" y={36 + i * 46} width="104" height="38" stroke-width="2" />
+        <text x="291" y={52 + i * 46} class="d-t">{a}</text>
+        <text x="291" y={67 + i * 46} font-size="10">incentivo {b}</text>
+      </>))}
+    </>)}
+
+    {id === 'validador-ocr' && (<>
+      <g transform="rotate(-2 94 124)">
+        <rect x="24" y="24" width="140" height="200" class="d-b k-l" />
+        <rect x="38" y="40" width="80" height="6" class="d-t" />
+        <rect x="38" y="58" width="110" height="3" class="d-l" /><rect x="38" y="66" width="100" height="3" class="d-l" />
+        <rect x="38" y="74" width="106" height="3" class="d-l" /><rect x="38" y="82" width="70" height="3" class="d-l" />
+        <text x="40" y="125" class="d-t" font-size="13">N° <tspan class="num">0?6 5?2</tspan></text>
+        <rect class="caja k-a" x="32" y="108" width="122" height="24" stroke-width="2" stroke-dasharray="5 3" />
+        <rect x="38" y="150" width="110" height="3" class="d-l" /><rect x="38" y="158" width="96" height="3" class="d-l" /><rect x="38" y="166" width="104" height="3" class="d-l" />
+        <path class="k-t" d="M42 204 q10 -14 20 0 t20 0 t20 -4" stroke-width="1.2" />
+        <g class="scan"><rect x="24" y="24" width="140" height="16" class="d-a" opacity=".14" /><rect x="24" y="38" width="140" height="2" class="d-a" /></g>
+      </g>
+      <text x="196" y="40">Lectura OCR</text>
+      <text x="196" y="70" class="val d-t" font-size="18">????????</text>
+      <text x="196" y="96" class="res d-w">✗ no se pudo validar</text>
+      <text x="196" y="138">Salida</text>
+      {salidas.map((s, i) => (
+        <g class="out">
+          <rect x="196" y={148 + i * 26} width="188" height="20" class="d-b k-l" />
+          <rect x="203" y={153 + i * 26} width="8" height="10" class={i === 2 ? 'd-w' : 'd-a'} />
+          <text x="218" y={162 + i * 26} class={i === 2 ? 'd-w' : 'd-t'}>{s}</text>
+        </g>
+      ))}
+    </>)}
+
+    {id === 'anomalias' && (<>
+      <defs><clipPath id="clip-cinta"><rect x="20" y="22" width="360" height="62" /></clipPath></defs>
+      <text x="20" y="14">Secuencia de video</text>
+      <g clip-path="url(#clip-cinta)"><g class="cinta">
+        {R(10).map((i) => { const x = 20 + i * 58; return (<>
+          <rect x={x} y="28" width="52" height="50" class="d-s" />
+          <circle cx={x + 14 + ((i * 7) % 18)} cy="60" r="4" class="d-l" />
+          <rect x={x + 32} y="44" width="9" height="26" class="d-l" />
+          {i === 6 && <><rect x={x + 8} y="40" width="14" height="30" class="d-w" opacity=".55" /><rect class="alerta k-w" x={x + 1} y="29" width="50" height="48" stroke-width="2.5" /></>}
+        </>); })}
+      </g></g>
+      <text x="30" y="104">Puntaje de anomalía</text>
+      <path class="k-l" d="M30 220H380 M30 112V220" stroke-width="1.2" />
+      <rect class="zona d-w" x="215" y="112" width="57" height="108" opacity=".16" />
+      <line x1="30" y1="140" x2="380" y2="140" class="k-w" stroke-dasharray="5 4" stroke-width="1.2" />
+      <text x="380" y="134" text-anchor="end" class="d-w" font-size="10">umbral</text>
+      <path class="curva k-a" d={curva} stroke-width="2.2" stroke-linejoin="round" />
+      <circle class="pico d-w" cx="255" cy="118" r="5" />
+      <text class="etq d-w" x="196" y="122" text-anchor="end" font-size="11">anomalía</text>
+      <text x="30" y="240" font-size="10">tiempo →</text>
+    </>)}
+
+    {id === 'invita' && (<>
+      <text x="16" y="26">Organizador</text>
+      {R(3).map((i) => (<>
+        <rect x="16" y={40 + i * 30} width="104" height="20" class="d-b k-l" />
+        <rect class="tipeo d-s" x="21" y={45 + i * 30} width={[70, 56, 82][i]} height="10" />
+      </>))}
+      <g class="pub"><rect x="16" y="140" width="104" height="24" class="d-a" /><text x="68" y="156" text-anchor="middle" class="d-sa">Publicar</text></g>
+      <line x1="126" y1="152" x2="142" y2="152" class="k-l" stroke-width="1.5" />
+      <circle class="pk d-a" cx="126" cy="152" r="3.5" />
+      <rect x="150" y="14" width="100" height="232" rx="16" class="d-b k-t" stroke-width="1.5" />
+      <rect x="158" y="34" width="84" height="196" rx="4" class="d-s" />
+      <rect x="186" y="21" width="28" height="4" rx="2" class="d-l" />
+      <text x="200" y="50" text-anchor="middle" font-size="8">/i/ana-luis</text>
+      <g class="tarjeta">
+        <rect x="168" y="152" width="64" height="46" class="d-b k-l" />
+        <text x="200" y="166" text-anchor="middle" class="d-t" font-size="9">{'Ana & Luis'}</text>
+        <rect x="182" y="171" width="36" height="3" class="d-l" />
+        <rect x="174" y="180" width="52" height="12" class="d-a" />
+        <text x="200" y="189" text-anchor="middle" class="d-sa" font-size="7">Confirmar</text>
+      </g>
+      <rect x="164" y="150" width="72" height="50" class="d-b k-a" stroke-width="1.5" />
+      <path class="k-a" d="M164 200 L200 176 L236 200" stroke-width="1.2" />
+      <path class="solapa d-a" d="M164 150 L200 178 L236 150 Z" />
+      <text x="268" y="26">Invitados</text>
+      <text x="268" y="70" class="ctr d-t" font-size="28">48</text>
+      <text x="268" y="88">confirmados</text>
+      <rect x="268" y="102" width="118" height="8" class="d-l" />
+      <rect class="prog d-a" x="268" y="102" width="118" height="8" />
+      <text x="268" y="128" font-size="10">de 60 invitados</text>
+      <text x="268" y="172">En línea</text>
+      <text x="268" y="190" class="d-a" font-size="10">invitaplus.pages.dev</text>
+    </>)}
+  </svg>
+  <figcaption><span>Cómo funciona</span><span>Datos de ejemplo</span></figcaption>
+</figure>
+)}
