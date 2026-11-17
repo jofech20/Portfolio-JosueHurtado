@@ -4,15 +4,24 @@ export const sitio = {
   titulo: 'Automatización de procesos e integración de sistemas',
   ubicacion: 'Lima, Perú',
   correo: 'n00254962@upn.pe',
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/in/josuehurtadochavez',
   github: '',
+  invita: 'https://invitaplus.pages.dev/',
   descripcion:
-    'Portafolio de Josué Hurtado: automatización de procesos e integración de sistemas con Python, VBA, Google Apps Script y Power Platform.',
+    'Portafolio de Josué Hurtado: automatización de procesos e integración de sistemas con Python, VBA, Google Apps Script y Power Platform. Fundador de Invita+ Studio.',
 };
 
 export const experiencia = [
   {
-    cargo: 'Practicante Profesional de Automatización de Procesos',
+    cargo: 'Fundador',
+    lugar: 'Invita+ Studio · Proyecto propio',
+    fecha: 'Actual',
+    texto:
+      'Creé y desplegué una plataforma de invitaciones digitales para eventos, con páginas públicas, confirmación de asistencia y escenas 3D.',
+    url: 'https://invitaplus.pages.dev/',
+  },
+  {
+    cargo: 'Automatización de Procesos',
     lugar: 'Gestión Humana · Empresa de consumo masivo',
     fecha: 'Abr 2026 – actual',
     texto:
@@ -22,8 +31,7 @@ export const experiencia = [
     cargo: 'Analista de Mesa de Ayuda TI N1',
     lugar: 'Consultora de servicios TI · Cuenta del sector minero',
     fecha: 'Dic 2025 – Abr 2026',
-    texto:
-      'Gestioné tickets en ServiceNow según los SLA y atendí a usuarios por correo, chat y teléfono.',
+    texto: 'Gestioné tickets en ServiceNow según los SLA y atendí a usuarios por correo, chat y teléfono.',
   },
   {
     cargo: 'Soporte Tecnológico',
@@ -32,7 +40,7 @@ export const experiencia = [
     texto:
       'Resolví incidencias de hardware y software, y mantuve equipos. También apoyé la instalación de cámaras y la extracción de grabaciones de videovigilancia.',
   },
-];
+] as { cargo: string; lugar: string; fecha: string; texto: string; url?: string }[];
 
 export const formacion = [
   { nombre: 'Ingeniería de Sistemas Computacionales', detalle: 'Universidad Privada del Norte · Egresado 2025 · PGA 16.87' },

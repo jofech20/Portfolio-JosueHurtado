@@ -3,10 +3,13 @@ import '@fontsource-variable/schibsted-grotesk';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/600.css';
 import '../styles/global.css';
+import Iconos from '../components/Iconos.astro';
+import Pipe from '../components/Pipe.astro';
+import Diagrama from '../components/Diagrama.astro';
 import { sitio, experiencia, formacion } from '../data/sitio';
 import { proyectos, casos, areas, estados, stackConteo } from '../data/proyectos';
 
-const enUso = proyectos.filter((p) => p.estado === 'En uso').length;
+const enProduccion = proyectos.filter((p) => p.estado === 'En uso' || p.estado === 'Desplegado').length;
 const plataformas = 4;
 const pestanas = [
   ['inicio', 'Inicio'], ['metodo', 'Método'], ['casos', 'Casos'], ['indice', 'Índice'],
@@ -15,11 +18,15 @@ const pestanas = [
 const fila1 = ['J', 'O', 'S', 'U', 'É'];
 const fila2 = ['H', 'U', 'R', 'T', 'A', 'D', 'O'];
 const columnas = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+const maxStack = Math.max(...stackConteo.map((s) => s.n));
+const asas = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 const clase = (e: string) => 'estado estado--' + e.toLowerCase().replace(/[^a-z]/g, '');
+const externo = { target: '_blank', rel: 'noopener' };
 const jsonld = JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Person', name: 'Josué Hurtado',
   jobTitle: sitio.titulo, address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
   knowsAbout: ['Automatización de procesos', 'Python', 'VBA', 'Google Apps Script', 'Power Platform'],
+  sameAs: [sitio.linkedin, sitio.invita].filter(Boolean),
   url: Astro.site?.href,
 });
 ---
@@ -37,46 +44,65 @@ const jsonld = JSON.stringify({
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href={Astro.site?.href} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" as="image" href="/josue.webp" />
   <script type="application/ld+json" set:html={jsonld}></script>
 </head>
 <body>
+  <Iconos />
   <a class="saltar" href="#casos">Saltar a los proyectos</a>
 
   <header class="barra" aria-label="Barra de fórmulas">
     <a class="barra__nombre" href="#inicio" id="barra-ref">A1</a>
     <span class="barra__fx" aria-hidden="true">fx</span>
     <output class="barra__formula" id="barra-formula">=CONCATENAR("Josué"; " "; "Hurtado")</output>
+    {sitio.linkedin && <a class="barra__link" href={sitio.linkedin} {...externo} aria-label="LinkedIn de Josué Hurtado"><span class="ln-largo">LinkedIn</span><span class="ln-corto">in</span> ↗</a>}
   </header>
 
   <main>
     <section class="hero" id="inicio" data-ref="A1" data-formula={'=CONCATENAR("Josué"; " "; "Hurtado")'}>
       <div class="hoja">
         <h1 class="sr">{sitio.nombre}. {sitio.titulo}.</h1>
-        <div class="celdas" aria-hidden="true" id="celdas">
-          <div class="esquina"></div>
-          {columnas.map((c) => <div class="col">{c}</div>)}
-          <div class="fil">1</div>
-          {fila1.map((l) => <div class="celda celda--letra"><span class="letra">{l}</span></div>)}
-          <div class="celda celda--dato"><span>{sitio.ubicacion}</span></div>
-          <div class="celda celda--dato"><span>Disponible para conversar</span></div>
-          <div class="fil">2</div>
-          {fila2.map((l) => <div class="celda celda--letra"><span class="letra">{l}</span></div>)}
-          <div class="seleccion" id="seleccion"><i></i></div>
-        </div>
-        <div class="hero__pie">
-          <p class="hero__tesis">{sitio.titulo}.</p>
-          <div class="hero__texto">
-            <p>Convierto tareas manuales en Excel, Word y correo en herramientas para RR. HH., ventas y operaciones. Trabajo con Python, VBA, Apps Script y Power Platform.</p>
-            <div class="acciones">
-              <a class="boton boton--lleno" href="#casos">Ver casos</a>
-              <a class="boton" href="#contacto">Escribirme</a>
+        <div class="hero__grid">
+          <div class="hero__izq">
+            <div class="celdas" aria-hidden="true" id="celdas">
+              <div class="esquina"></div>
+              {columnas.map((c) => <div class="col" data-c={c}>{c}</div>)}
+              <div class="fil" data-r="1">1</div>
+              {fila1.map((l, i) => <div class="celda celda--letra" data-c={columnas[i]} data-r="1"><span class="letra">{l}</span></div>)}
+              <div class="celda celda--dato" data-c="F" data-r="1"><span>{sitio.ubicacion}</span></div>
+              <div class="celda celda--dato" data-c="G" data-r="1"><span>Abierto a oportunidades</span></div>
+              <div class="fil" data-r="2">2</div>
+              {fila2.map((l, i) => <div class="celda celda--letra" data-c={columnas[i]} data-r="2"><span class="letra">{l}</span></div>)}
+              <div class="seleccion" id="seleccion"><i></i></div>
+            </div>
+            <div class="hero__pie">
+              <p class="hero__tesis">{sitio.titulo}.</p>
+              <div class="hero__texto">
+                <p>Convierto tareas manuales en Excel, Word y correo en herramientas para RR. HH., ventas y operaciones. Trabajo con Python, VBA, Apps Script y Power Platform.</p>
+                <p class="fundador"><span class="estado estado--desplegado">En línea</span> Fundador de <a href={sitio.invita} {...externo}>Invita+ Studio ↗</a></p>
+                <div class="acciones">
+                  <a class="boton boton--lleno" href="#casos">Ver casos</a>
+                  <a class="boton" href="#contacto">Escribirme</a>
+                  {sitio.linkedin && <a class="boton" href={sitio.linkedin} {...externo}>LinkedIn ↗</a>}
+                </div>
+              </div>
+              <dl class="cifras">
+                <div><dt>Proyectos</dt><dd data-contar={proyectos.length}>{proyectos.length}</dd></div>
+                <div><dt>En producción</dt><dd data-contar={enProduccion}>{enProduccion}</dd></div>
+                <div><dt>Plataformas</dt><dd data-contar={plataformas}>{plataformas}</dd></div>
+              </dl>
             </div>
           </div>
-          <dl class="cifras">
-            <div><dt>Proyectos</dt><dd data-contar={proyectos.length}>{proyectos.length}</dd></div>
-            <div><dt>En uso</dt><dd data-contar={enUso}>{enUso}</dd></div>
-            <div><dt>Plataformas</dt><dd data-contar={plataformas}>{plataformas}</dd></div>
-          </dl>
+          <figure class="retrato" id="retrato">
+            <div class="retrato__marco">
+              <canvas class="lluvia" id="lluvia-hero" aria-hidden="true"></canvas>
+              <img src="/josue.webp" alt="Retrato de Josué Hurtado" width="860" height="1026" fetchpriority="high" />
+              <div class="retrato__scan" aria-hidden="true"></div>
+              <span class="retrato__tag" aria-hidden="true">H1 · josue.webp</span>
+              <p class="retrato__linea" aria-hidden="true"><span class="prompt">&gt;</span> <span id="tipeo">automatizando procesos</span><i class="cursor"></i></p>
+            </div>
+            {asas.map((a) => <span class={`asa asa--${a}`} aria-hidden="true"></span>)}
+          </figure>
         </div>
       </div>
     </section>
@@ -122,7 +148,7 @@ const jsonld = JSON.stringify({
     <section class="seccion" id="casos" data-ref="C3" data-formula={'=FILTRAR(proyectos; destacado=VERDADERO)'}>
       <div class="tope">
         <h2>Casos destacados</h2>
-        <p class="nota">Los que mejor muestran cómo pienso un problema</p>
+        <p class="nota">Cada diagrama muestra cómo funciona la herramienta</p>
       </div>
       {casos.map((p) => (
         <article class="caso" id={p.id} data-ref="C3" data-formula={`=CASO("${p.nombre}")`}>
@@ -130,15 +156,13 @@ const jsonld = JSON.stringify({
             <p class="caso__meta"><span>{p.area}</span><span class={clase(p.estado)}>{p.estado}</span></p>
             <h3>{p.nombre}</h3>
             <p class="caso__stack">{p.stack.join(' · ')}</p>
+            {p.url && <a class="boton boton--lleno vivo" href={p.url} {...externo}>Ver sitio en vivo ↗</a>}
+            <Diagrama id={p.id} titulo={`Diagrama animado de cómo funciona ${p.nombre}`} />
           </header>
           <dl class="registro">
             <div><dt>Problema</dt><dd>{p.caso!.problema}</dd></div>
             <div><dt>Solución</dt><dd>{p.caso!.solucion}</dd></div>
-            <div><dt>Flujo</dt><dd>
-              <ol class="flujo">
-                {p.caso!.flujo.map((f) => <li>{f}</li>)}
-              </ol>
-            </dd></div>
+            <div><dt>Flujo</dt><dd><Pipe pasos={p.flujo} /></dd></div>
             <div><dt>Decisiones</dt><dd><ul class="decisiones">{p.caso!.decisiones.map((d) => <li>{d}</li>)}</ul></dd></div>
             <div><dt>En cifras</dt><dd class="datos">
               {p.caso!.datos.map((d) => <p><strong>{d.valor}</strong><span>{d.etiqueta}</span></p>)}
@@ -151,7 +175,7 @@ const jsonld = JSON.stringify({
     <section class="seccion" id="indice" data-ref="D4" data-formula={`=CONTARA(proyectos) → ${proyectos.length}`}>
       <div class="tope">
         <h2>Índice de proyectos</h2>
-        <p class="nota"><span id="conteo">{proyectos.length}</span> de {proyectos.length} filas</p>
+        <p class="nota"><span id="conteo">{proyectos.length}</span> de {proyectos.length} filas · abre una fila para ver su flujo</p>
       </div>
       <div class="filtros">
         <div class="chips" role="group" aria-label="Filtrar por área">
@@ -178,9 +202,15 @@ const jsonld = JSON.stringify({
               <span class={clase(p.estado)}>{p.estado}</span>
             </summary>
             <div class="fila__mas">
-              <p>{p.resumen}</p>
-              <p class="fila__todo">{p.stack.join(' · ')}</p>
-              {p.caso && <a href={`#${p.id}`}>Leer el caso completo</a>}
+              <Pipe pasos={p.flujo} />
+              <div class="fila__txt">
+                <p>{p.resumen}</p>
+                <p class="fila__todo">{p.stack.join(' · ')}</p>
+                <p class="fila__links">
+                  {p.caso && <a href={`#${p.id}`}>Leer el caso completo</a>}
+                  {p.url && <a href={p.url} {...externo}>Ver sitio en vivo ↗</a>}
+                </p>
+              </div>
             </div>
           </details>
         ))}
@@ -197,7 +227,7 @@ const jsonld = JSON.stringify({
         {stackConteo.map((s) => (
           <li><button data-tec={s.nombre}>
             <span class="barras__n">{s.nombre}</span>
-            <span class="barras__b" aria-hidden="true">{'█'.repeat(s.n)}</span>
+            <span class="barras__b" aria-hidden="true"><i style={`--p:${s.n / maxStack}`}></i></span>
             <span class="barras__c">{s.n}</span>
           </button></li>
         ))}
@@ -214,6 +244,7 @@ const jsonld = JSON.stringify({
               <h3>{e.cargo}</h3>
               <p class="exp__lugar">{e.lugar}</p>
               <p>{e.texto}</p>
+              {e.url && <a class="exp__url" href={e.url} {...externo}>{e.url.replace('https://', '').replace(/\/$/, '')} ↗</a>}
             </li>
           ))}
         </ol>
@@ -225,6 +256,7 @@ const jsonld = JSON.stringify({
     </section>
 
     <section class="contacto" id="contacto" data-ref="G7" data-formula={`=HIPERVINCULO("mailto:${sitio.correo}"; "Escribir")`}>
+      <canvas class="lluvia lluvia--contacto" id="lluvia-contacto" aria-hidden="true"></canvas>
       <div class="contacto__in">
         <h2>¿Tienes un proceso que se repite cada semana?</h2>
         <p>Cuéntame cómo se hace hoy. Conversemos sobre un puesto o un proyecto de automatización.</p>
@@ -232,12 +264,11 @@ const jsonld = JSON.stringify({
           <a href={`mailto:${sitio.correo}`} id="correo">{sitio.correo}</a>
           <button class="boton" id="copiar" data-correo={sitio.correo}>Copiar correo</button>
         </div>
-        {(sitio.linkedin || sitio.github) && (
-          <p class="enlaces">
-            {sitio.linkedin && <a href={sitio.linkedin}>LinkedIn</a>}
-            {sitio.github && <a href={sitio.github}>GitHub</a>}
-          </p>
-        )}
+        <p class="enlaces">
+          {sitio.linkedin && <a class="boton" href={sitio.linkedin} {...externo}>LinkedIn ↗</a>}
+          {sitio.invita && <a class="boton" href={sitio.invita} {...externo}>Invita+ Studio ↗</a>}
+          {sitio.github && <a class="boton" href={sitio.github} {...externo}>GitHub ↗</a>}
+        </p>
         <p class="pie">Los proyectos se describen sin nombres de empresas ni datos internos.</p>
       </div>
     </section>
@@ -245,6 +276,7 @@ const jsonld = JSON.stringify({
 
   <nav class="pestanas" aria-label="Secciones">
     {pestanas.map(([id, t], i) => <a href={`#${id}`} data-tab={id} aria-current={i === 0 ? 'true' : undefined}>{t}</a>)}
+    <span class="pestanas__ind" aria-hidden="true"></span>
   </nav>
 
   <script src="../scripts/main.ts"></script>
