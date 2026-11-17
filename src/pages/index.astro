@@ -22,12 +22,13 @@ const maxStack = Math.max(...stackConteo.map((s) => s.n));
 const asas = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 const clase = (e: string) => 'estado estado--' + e.toLowerCase().replace(/[^a-z]/g, '');
 const externo = { target: '_blank', rel: 'noopener' };
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const jsonld = JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Person', name: 'Josué Hurtado',
   jobTitle: sitio.titulo, address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
   knowsAbout: ['Automatización de procesos', 'Python', 'VBA', 'Google Apps Script', 'Power Platform'],
   sameAs: [sitio.linkedin, sitio.invita].filter(Boolean),
-  url: Astro.site?.href,
+  url: new URL(base, Astro.site).href,
 });
 ---
 <html lang="es">
@@ -40,11 +41,11 @@ const jsonld = JSON.stringify({
   <meta property="og:title" content={`${sitio.nombre} · ${sitio.titulo}`} />
   <meta property="og:description" content={sitio.descripcion} />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content={new URL('/og.png', Astro.site).href} />
+  <meta property="og:image" content={new URL(`${base}og.png`, Astro.site).href} />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href={Astro.site?.href} />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" as="image" href="/josue.webp" />
+  <link rel="canonical" href={new URL(base, Astro.site).href} />
+  <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+  <link rel="preload" as="image" href={`${base}josue.webp`} />
   <script type="application/ld+json" set:html={jsonld}></script>
 </head>
 <body>
@@ -96,7 +97,7 @@ const jsonld = JSON.stringify({
           <figure class="retrato" id="retrato">
             <div class="retrato__marco">
               <canvas class="lluvia" id="lluvia-hero" aria-hidden="true"></canvas>
-              <img src="/josue.webp" alt="Retrato de Josué Hurtado" width="860" height="1026" fetchpriority="high" />
+              <img src={`${base}josue.webp`} alt="Retrato de Josué Hurtado" width="860" height="1026" fetchpriority="high" />
               <div class="retrato__scan" aria-hidden="true"></div>
               <span class="retrato__tag" aria-hidden="true">H1 · josue.webp</span>
               <p class="retrato__linea" aria-hidden="true"><span class="prompt">&gt;</span> <span id="tipeo">automatizando procesos</span><i class="cursor"></i></p>

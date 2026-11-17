@@ -3,6 +3,6 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://jofech20.github.io',
-  // base: '/Portfolio-JosueHurtado',
+  base: '/Portfolio-JosueHurtado',
   build: { inlineStylesheets: 'always' },
 });
